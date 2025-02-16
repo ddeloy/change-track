@@ -1,0 +1,166 @@
+/* Enable smooth scrolling behavior across the app */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Ensures consistency in all dashboard layouts */
+.dashboard-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* Standardizes Paper components */
+.paper-container {
+  padding: 16px;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Prevents button overflow */
+button {
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+/* Hover effect for buttons */
+button:hover {
+  opacity: 0.85;
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* Center text and maintain spacing */
+.text-center {
+  text-align: center;
+}
+
+/* Ensures uniformity in role-based views */
+.role-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Fix grid alignment issues */
+.grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* Ensures tables are consistent in width */
+.table-container {
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
+}
+
+/* Fixes alignment issues across different roles */
+.role-based-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Fixes spacing and consistency of dropdown */
+.role-selector {
+  width: 250px;
+  margin-bottom: 16px;
+}
+
+/* Fixes padding and alignment for Change Order Table */
+.change-order-table {
+  width: 100%;
+  max-width: 900px;
+}
+
+/* Sidebar styling improvements */
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: #f8f9fa;
+  padding-top: 20px;
+}
+
+/* Sidebar link styling */
+.sidebar a {
+  display: block;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: #333;
+}
+
+/* Hover effect for sidebar links */
+.sidebar a:hover {
+  background: #ddd;
+  transition: background 0.2s ease-in-out;
+}
+
+/* Fix for Export to CSV Button */
+.export-button {
+  width: 180px;
+  text-align: center;
+}
+
+/* Prevents layout shifting when changing roles */
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Restricts width of select dropdown and search box */
+.select-container,
+.search-container {
+  max-width: 400px; /* Restricts width */
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.select-container select,
+.search-container input {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+}
+
+/* Ensures search and select don't span full width */
+.change-order-controls {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* 🛠️ NEW: Hover effect for table rows */
+tbody tr:hover {
+  background-color: #f5f5f5;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* 🛠️ NEW: Adjusted status summary & chart layout */
+.status-summary-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 350px;
+  margin: auto;
+}
+
+/* 🛠️ NEW: Ensures better responsiveness for chart & copy */
+.status-summary-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
