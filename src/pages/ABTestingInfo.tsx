@@ -34,20 +34,20 @@ export default function ABTestingInfo() {
                 </Typography>
 
                 <Typography variant="h5" gutterBottom>
-                    🔹 **How We Use A/B Testing:**
+                    🔹 **How A/B Testing Works in This Application:**
                 </Typography>
                 <ul>
-                    <li>🎲 **Randomized User Assignment** – Variant A or B assigned randomly.</li>
-                    <li>📈 **Performance Tracking** – Clicks, interactions, and actions logged.</li>
-                    <li>🧠 **Data-Driven Insights** – Analyze user behavior for UI/UX improvements.</li>
+                    <li>🎲 <strong>Randomized Variant Assignment</strong>: Upon first visit, each user is assigned **Variant A** or **Variant B**. The assignment persists in **local storage** for consistency across sessions.</li>
+                    <li>📈 <strong>Interaction Tracking</strong>: Each button click is recorded, capturing **which button** was clicked and the **user's assigned variant**.</li>
+                    <li>🧠 <strong>Data Visualization</strong>: Interactions are **displayed visually** on the **A/B Testing Dashboard** to compare behaviors between **Variant A** and **Variant B**.</li>
                 </ul>
 
                 <Typography variant="h5" gutterBottom>
-                    🚀 **Current Experiments:**
+                    🚀 **Current Experiments (POC)**:
                 </Typography>
                 <ul>
-                    <li>🔘 **Button Style:** Outlined vs Solid export button.</li>
-                    <li>📑 **T&M Log Input:** Testing simplified input flow.</li>
+                    <li>🔘 <strong>Button Style</strong>: **Variant A** uses a **solid green colored button** while **Variant B** uses a **solid blue colored button** for the **"Export to CSV"** action.</li>
+                    <li>📑 <strong>T&M Log Interaction</strong>: The **"Assign T&M Tag"** button may have **different labels** or **styles** based on **A/B variant**.</li>
                 </ul>
 
                 <Box sx={{ display: "flex", gap: 2, marginTop: 2 }}>
