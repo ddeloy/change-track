@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Box, TextField, Button, Paper, Typography, List, ListItem, ListItemText } from "@mui/material";
+import { trackEvent } from "../services/abTestingUtils"; // ✅ Track events
 
 interface Message {
     id: number;
@@ -18,9 +19,12 @@ export default function MessageBoard() {
     const sendMessage = () => {
         if (!newMessage.trim()) return;
 
+        // ✅ Track the "Send Message" event
+        trackEvent("Button Click", "Send Message clicked (Variant B)");
+
         const message: Message = {
             id: messages.length + 1,
-            sender: "You", // Placeholder sender
+            sender: "You",
             text: newMessage,
             timestamp: new Date().toLocaleString()
         };
