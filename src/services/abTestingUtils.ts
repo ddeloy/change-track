@@ -13,12 +13,13 @@ export function getUserVariant(): Variant {
     return variant;
 }
 
-// Track user interactions with event labels
+// Track user interactions with event labels (always gets latest variant)
 export function trackEvent(action: string, label: string) {
+    const currentVariant = localStorage.getItem('userVariant') || 'Unknown'; // 🆕 Dynamic variant check
     const events = JSON.parse(localStorage.getItem('abTestingEvents') || '[]');
     const newEvent = {
         action,
-        label,
+        label: `${label} for Variant ${currentVariant}`, // 🆕 Attach current variant
         timestamp: new Date().toISOString(),
     };
     events.push(newEvent);
