@@ -3,7 +3,7 @@ import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography, Te
 import { utils, writeFile } from "xlsx";
 import { useFetchCORs } from "../services/useFetchCORS";
 import { useRole } from "../context/RoleContext.tsx";
-import { trackEvent } from "../services/abTestingUtils"; // ✅ A/B event tracking
+import { trackEvent, getUserVariant } from "../services/abTestingUtils"; // ✅ Import A/B utilities
 
 export default function ChangeOrderTable() {
     const { role } = useRole();
@@ -11,15 +11,19 @@ export default function ChangeOrderTable() {
     const [searchQuery, setSearchQuery] = useState("");
     const [filterStatus, setFilterStatus] = useState("");
 
+    const currentVariant = getUserVariant(); // ✅ Retrieve current A/B variant
+
+    // ✅ Filter logic
     const filteredData = corData.filter((cor) => {
         const matchesSearch = cor.id.includes(searchQuery) || cor.customer.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesStatus = filterStatus ? cor.status === filterStatus : true;
         return matchesSearch && matchesStatus;
     });
 
-    // ✅ Export with updated variant logic
+    // ✅ Export with variant-specific tracking
     const exportToCSV = () => {
-        trackEvent("Button Click", "Export to CSV clicked");
+        const buttonLabel = `Export to CSV clicked (Variant ${currentVariant})`; // ✅ Include variant
+        trackEvent("Button Click", buttonLabel);
         const worksheet = utils.json_to_sheet(filteredData);
         const workbook = utils.book_new();
         utils.book_append_sheet(workbook, worksheet, "COR Logs");
@@ -32,20 +36,38 @@ export default function ChangeOrderTable() {
                 Change Order Request Log ({role} View)
             </Typography>
 
+            {/* ✅ Search & Filter Inputs */}
             <Box sx={{ display: "flex", justifyContent: "center", gap: "16px", flexWrap: "wrap", marginBottom: 2 }}>
+                {/* ✅ Variant-specific border */}
                 <TextField
                     autoFocus
                     variant="outlined"
-                    label="Search Change Orders..."
+                    label="🔍 Search Change Orders..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    sx={{ maxWidth: "300px", width: "100%" }}
+                    sx={{
+                        maxWidth: "300px",
+                        width: "100%",
+                        borderColor: currentVariant === 'A' ? 'green' : 'blue',
+                        borderWidth: "2px",
+                        borderStyle: "solid",
+                        borderRadius: "5px",
+                    }}
                 />
+
+                {/* ✅ Filter Dropdown */}
                 <Select
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value)}
                     displayEmpty
-                    sx={{ maxWidth: "200px", width: "100%" }}
+                    sx={{
+                        maxWidth: "200px",
+                        width: "100%",
+                        borderColor: currentVariant === 'A' ? 'green' : 'blue',
+                        borderWidth: "2px",
+                        borderStyle: "solid",
+                        borderRadius: "5px",
+                    }}
                 >
                     <MenuItem value="">All Statuses</MenuItem>
                     <MenuItem value="Approved">Approved</MenuItem>
@@ -54,13 +76,19 @@ export default function ChangeOrderTable() {
                 </Select>
             </Box>
 
-            {/* ✅ Button with correct variant tracking */}
+            {/* ✅ Variant-Based Export Button */}
             <Box sx={{ display: "flex", justifyContent: "center", marginBottom: 2 }}>
-                <Button variant="contained" onClick={exportToCSV} sx={{ width: "180px" }}>
-                    Export to CSV
+                <Button
+                    variant="contained"
+                    color={currentVariant === 'A' ? "success" : "primary"}
+                    onClick={exportToCSV}
+                    sx={{ width: "200px" }}
+                >
+                    {currentVariant === 'A' ? "📗 Export to CSV (A)" : "📘 Export to CSV (B)"}
                 </Button>
             </Box>
 
+            {/* ✅ Display Table */}
             <Table>
                 <TableHead>
                     <TableRow>

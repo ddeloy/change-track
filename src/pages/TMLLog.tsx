@@ -3,7 +3,7 @@ import {
     Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, Box, Chip
 } from "@mui/material";
 import { useFetchTMTags } from "../services/useFetchTMTags";
-import { trackEvent } from "../services/abTestingUtils"; // ✅ Added A/B testing import
+import { trackEvent, getUserVariant } from "../services/abTestingUtils"; // ✅ Import variant utilities
 
 // ✅ Define type for T&M Tags
 interface TMTags {
@@ -19,11 +19,12 @@ export default function TMLLog() {
     const [searchQuery, setSearchQuery] = useState("");
     const [openModal, setOpenModal] = useState(false);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
-    const [assignedTags, setAssignedTags] = useState<TMTags[]>([]); // ✅ Strongly typed array
+    const [assignedTags, setAssignedTags] = useState<TMTags[]>([]);
 
     const tmTags: TMTags[] = useFetchTMTags();
+    const currentVariant = getUserVariant(); // ✅ Dynamically retrieve variant
 
-    // ✅ Predefined valid status colors
+    // ✅ Predefined status colors
     const statusColors: Record<NonNullable<TMTags["status"]>, "warning" | "success" | "error" | "info"> = {
         "Pending": "warning",
         "Approved": "success",
@@ -36,29 +37,27 @@ export default function TMLLog() {
         tag.tagNumber.includes(searchQuery) || tag.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    // ✅ Toggle tag selection in the modal
+    // ✅ Toggle tag selection
     const handleSelectTag = (tagNumber: string) => {
-        setSelectedTags(prev =>
-            prev.includes(tagNumber) ? prev.filter(t => t !== tagNumber) : [...prev, tagNumber]
+        setSelectedTags((prev) =>
+            prev.includes(tagNumber) ? prev.filter((t) => t !== tagNumber) : [...prev, tagNumber]
         );
     };
 
-    // ✅ Add selected tags to the main log
+    // ✅ Add selected tags to the main log with event tracking
     const handleAddTags = () => {
-        // 🛠️ Track this action
-        trackEvent("Button Click", "Assign T&M Tag clicked");
+        const buttonLabel = `Assign T&M Tag clicked (Variant ${currentVariant})`; // ✅ Label includes variant
+        trackEvent("Button Click", buttonLabel);
 
-        const newTags = tmTags.filter(tag => selectedTags.includes(tag.tagNumber));
-        setAssignedTags(prev => [...prev, ...newTags]); // Avoid duplicates
-        setOpenModal(false); // Close dialog
+        const newTags = tmTags.filter((tag) => selectedTags.includes(tag.tagNumber));
+        setAssignedTags((prev) => [...prev, ...newTags]);
+        setOpenModal(false);
     };
 
-    // ✅ Inline Editing - Updates assignedTags in state
+    // ✅ Inline editing logic
     const handleEditTag = (tagNumber: string, field: keyof TMTags, value: string) => {
-        setAssignedTags(prev =>
-            prev.map(tag =>
-                tag.tagNumber === tagNumber ? { ...tag, [field]: value } : tag
-            )
+        setAssignedTags((prev) =>
+            prev.map((tag) => (tag.tagNumber === tagNumber ? { ...tag, [field]: value } : tag))
         );
     };
 
@@ -68,17 +67,29 @@ export default function TMLLog() {
                 Time & Material Log
             </Typography>
 
-            {/* ✅ Search & Assign Buttons - Fixed Size */}
+            {/* ✅ Search & Assign Buttons */}
             <Box sx={{ display: "flex", gap: 2, alignItems: "center", marginBottom: 2 }}>
                 <TextField
                     variant="outlined"
                     placeholder="Search T&M Tags..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    sx={{ maxWidth: "350px", width: "100%" }} // ✅ Restrict width
+                    sx={{
+                        maxWidth: "350px",
+                        width: "100%",
+                        borderColor: currentVariant === 'A' ? 'green' : 'blue', // ✅ Variant-based border
+                        borderWidth: "2px",
+                        borderStyle: "solid",
+                        borderRadius: "5px",
+                    }}
                 />
-                <Button variant="contained" onClick={() => setOpenModal(true)}>
-                    Assign T&M Tag
+                {/* ✅ Variant-specific button text */}
+                <Button
+                    variant="contained"
+                    color={currentVariant === 'A' ? 'success' : 'primary'}
+                    onClick={() => setOpenModal(true)}
+                >
+                    {currentVariant === 'A' ? "🚀 Assign T&M Tag (A)" : "🛠️ Assign T&M Tag (B)"}
                 </Button>
             </Box>
 
@@ -91,11 +102,11 @@ export default function TMLLog() {
                         <TableCell>Date Performed</TableCell>
                         <TableCell>Date Signed</TableCell>
                         <TableCell>Customer Ref #</TableCell>
-                        <TableCell>Status</TableCell> {/* ✅ Status Column */}
+                        <TableCell>Status</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {assignedTags.map(tag => (
+                    {assignedTags.map((tag) => (
                         <TableRow key={tag.tagNumber}>
                             <TableCell>{tag.tagNumber}</TableCell>
                             <TableCell>
@@ -131,7 +142,7 @@ export default function TMLLog() {
                             <TableCell>
                                 <Chip
                                     label={tag.status || "Pending"}
-                                    color={statusColors[tag.status ?? "Pending"]} // ✅ Ensures type safety
+                                    color={statusColors[tag.status ?? "Pending"]}
                                     variant="outlined"
                                 />
                             </TableCell>
@@ -150,7 +161,15 @@ export default function TMLLog() {
                         label="Search T&M Tags..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        sx={{ maxWidth: "350px", width: "100%", marginBottom: 2 }} // ✅ Fix width in modal too
+                        sx={{
+                            maxWidth: "350px",
+                            width: "100%",
+                            marginBottom: 2,
+                            borderColor: currentVariant === 'A' ? 'green' : 'blue', // ✅ Variant-based border
+                            borderWidth: "2px",
+                            borderStyle: "solid",
+                            borderRadius: "5px",
+                        }}
                     />
                     <Table>
                         <TableHead>
@@ -161,7 +180,7 @@ export default function TMLLog() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {filteredTags.map(tag => (
+                            {filteredTags.map((tag) => (
                                 <TableRow key={tag.tagNumber} onClick={() => handleSelectTag(tag.tagNumber)}>
                                     <TableCell>
                                         <input
@@ -179,8 +198,13 @@ export default function TMLLog() {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpenModal(false)}>Cancel</Button>
-                    <Button variant="contained" onClick={handleAddTags} disabled={selectedTags.length === 0}>
-                        Add
+                    <Button
+                        variant="contained"
+                        color={currentVariant === 'A' ? 'success' : 'primary'}
+                        onClick={handleAddTags}
+                        disabled={selectedTags.length === 0}
+                    >
+                        {currentVariant === 'A' ? "✅ Add Tags (A)" : "🔹 Add Tags (B)"}
                     </Button>
                 </DialogActions>
             </Dialog>
