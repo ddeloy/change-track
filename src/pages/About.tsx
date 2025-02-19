@@ -27,6 +27,9 @@ export default function About() {
                     <Typography component="li" variant="body1">
                         <strong>T&M Log Integration</strong> – Search, assign, and track Time & Material tags
                     </Typography>
+                    <Typography component="li" variant="body1">
+                        <strong>A/B Testing</strong> – Simple POC
+                    </Typography>
                 </ul>
 
                 <Typography variant="h5" gutterBottom>
@@ -45,7 +48,7 @@ export default function About() {
                     </Typography>
                 </ul>
                 <Typography variant="body2" sx={{ marginTop: "20px", fontStyle: "italic" }}>
-                    *This MVP demonstrates a functional proof-of-concept for Change Order Management, with an emphasis on clean UI/UX and scalability.*
+                    *This MVP demonstrates a functional proof-of-concept for Change Order Management, with an emphasis on clean UI/UX and scalability.
                 </Typography>
             </Paper>
         </Box>
