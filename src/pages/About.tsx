@@ -28,7 +28,8 @@ export default function About() {
                         <strong>T&M Log Integration</strong> – Search, assign, and track Time & Material tags
                     </Typography>
                     <Typography component="li" variant="body1">
-                        <strong>A/B Testing</strong> – Simple POC
+                        <strong>A/B Testing</strong> – Simple proof-of-concept to track user interactions and feature variations.
+
                     </Typography>
                 </ul>
 
